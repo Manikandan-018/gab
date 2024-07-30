@@ -1,4 +1,7 @@
-C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\model\Product.java
-C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\ProductServiceApplication.java
-C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\controller\ProductController.java
-C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\repository\ProductRepository.java
+C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\MainServiceApplication.java
+C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\model\Company.java
+C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\model\Store.java
+C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\repository\StoreRepository.java
+C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\repository\CompanyRepository.java
+C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\controller\StoreController.java
+C:\Users\ADMIN\Desktop\PBM\PBM_API\src\main\java\com\micro\service\controller\CompanyController.java

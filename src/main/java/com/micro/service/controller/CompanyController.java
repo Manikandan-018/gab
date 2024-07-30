@@ -52,7 +52,7 @@ public class CompanyController {
     @GetMapping("/getAll")
     public ResponseEntity<?> getAllCompanies() {
         List<Company> companies = companyRepository.findAll();
-
+        
         Map<String, Object> response = new LinkedHashMap<>();
         Map<String, String> message = new LinkedHashMap<>();
         message.put("code", "PBM-200");
