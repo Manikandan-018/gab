@@ -30,12 +30,16 @@ public class CompanyController {
     @PostMapping("/register")
     public ResponseEntity<?> registerCompany(@RequestBody Company company) {
         validateCompany(company);
+             
+     // Generate and set the company ID
+        company.setId(generateID());
+
 
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         company.setCreatedDate(dateTime.format(formatter));
 
-        // Save the company, id will be auto-generated
+       
         companyRepository.save(company);
 
         Map<String, Object> response = new LinkedHashMap<>();
@@ -63,7 +67,7 @@ public class CompanyController {
     }
 
     @GetMapping("/byCompanyId/{id}")
-    public ResponseEntity<?> getCompanyById(@PathVariable UUID id) {
+    public ResponseEntity<?> getCompanyById(@PathVariable String id) {
         Optional<Company> company = companyRepository.findById(id);
 
         if (company.isPresent()) {
@@ -81,7 +85,7 @@ public class CompanyController {
     
 
     @PutMapping("/updateByCompanyId/{id}")
-    public ResponseEntity<?> updateCompanyById(@PathVariable UUID id,
+    public ResponseEntity<?> updateCompanyById(@PathVariable String id,
                                                @Valid @RequestBody Company company) {
         Optional<Company> companyOptional = companyRepository.findById(id);
 
@@ -150,7 +154,7 @@ public class CompanyController {
 
 
     @DeleteMapping("/deleteByCompanyId/{id}")
-    public ResponseEntity<?> deleteCompanyById(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteCompanyById(@PathVariable String id) {
         Optional<Company> companyOptional = companyRepository.findById(id);
 
         if (companyOptional.isPresent()) {
@@ -175,6 +179,17 @@ public class CompanyController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valid email is required");
         }
     }
+    
+    private static String generateID() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            int index = (int) (Math.random() * characters.length());
+            sb.append(characters.charAt(index));
+        }
+        return sb.toString();
+    }
+
     
 
     private Map<String, String> createErrorResponse(String code, String description) {

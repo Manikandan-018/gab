@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +28,14 @@ import jakarta.validation.Valid;
 public class StoreController {
 
     @Autowired
-    StoreRepository storeRepository;
+    private StoreRepository storeRepository;
 
     @Autowired
-    CompanyRepository companyRepository;
+    private CompanyRepository companyRepository;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerStore(@RequestBody @Valid Store store) {
-        UUID companyId = store.getCompanyId();
-        
+        String companyId = store.getCompanyId();
 
         Optional<Company> companyOptional = companyRepository.findById(companyId);
         if (companyOptional.isPresent()) {
@@ -47,7 +45,7 @@ public class StoreController {
             int storeSize = storeList.size();
             if (storeCount <= storeSize) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(createErrorResponse("PBM-400", "Store count is full for the given company Id"));
+                        .body(createErrorResponse("PBM-400", "Store count is full for the given company ID"));
             }
 
             // Check if store name already exists
@@ -67,7 +65,10 @@ public class StoreController {
             // Validate storeName and storeEmail
             validateStore(store);
 
-            // Set createdDate with current date and time in yyyyMMddHHmmss format
+            // Set ID, createdDate, and other properties
+            store.setId(generateID());
+            
+            
             LocalDateTime dateTime = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
             store.setCreatedDate(dateTime.format(formatter));
@@ -95,7 +96,17 @@ public class StoreController {
         Pattern pattern = Pattern.compile(emailRegex);
         return pattern.matcher(email).matches();
     }
-    
+
+    private String generateID() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            int index = (int) (Math.random() * characters.length());
+            sb.append(characters.charAt(index));
+        }
+        return sb.toString();
+    }
+
     private Map<String, Object> createSuccessResponse(String code, String description, Store store) {
         Map<String, Object> successResponse = new LinkedHashMap<>();
         Map<String, String> message = new LinkedHashMap<>();
@@ -106,8 +117,12 @@ public class StoreController {
         return successResponse;
     }
 
-
- 
+    private Map<String, String> createErrorResponse(String code, String description) {
+        Map<String, String> errorResponse = new LinkedHashMap<>();
+        errorResponse.put("code", code);
+        errorResponse.put("description", description);
+        return errorResponse;
+    }
 
     @GetMapping("/getAll")
     public ResponseEntity<?> getAllStores() {
@@ -122,9 +137,8 @@ public class StoreController {
         return ResponseEntity.ok().body(response);
     }
 
-
     @GetMapping("/byStoreId/{id}")
-    public ResponseEntity<?> getStoreById(@PathVariable UUID id) {
+    public ResponseEntity<?> getStoreById(@PathVariable String id) {
         Optional<Store> store = storeRepository.findById(id);
 
         if (store.isPresent()) {
@@ -136,13 +150,14 @@ public class StoreController {
             response.put("data", store.get());
             return ResponseEntity.ok().body(response);
         } else {
-            return ResponseEntity.status(404).body(createErrorResponse("PBM-404", "Given ID could not be found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(createErrorResponse("PBM-404", "Given ID could not be found"));
         }
     }
 
     @PutMapping("/updateByStoreId/{id}")
-    public ResponseEntity<?> updateStoreById(@PathVariable UUID id, 
-    		                                 @RequestBody @Valid Store store) {
+    public ResponseEntity<?> updateStoreById(@PathVariable String id,
+                                              @RequestBody @Valid Store store) {
         Optional<Store> existingStoreOptional = storeRepository.findById(id);
 
         if (existingStoreOptional.isPresent()) {
@@ -178,7 +193,7 @@ public class StoreController {
     }
 
     @DeleteMapping("/deleteByStoreId/{id}")
-    public ResponseEntity<?> deleteStoreById(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteStoreById(@PathVariable String id) {
         Optional<Store> storeOptional = storeRepository.findById(id);
 
         if (storeOptional.isPresent()) {
@@ -194,14 +209,5 @@ public class StoreController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(createErrorResponse("PBM-404", "Given Store ID could not be found"));
         }
-    }
-    
-
-
-    private Map<String, String> createErrorResponse(String code, String description) {
-        Map<String, String> errorResponse = new LinkedHashMap<>();
-        errorResponse.put("code", code);
-        errorResponse.put("description", description);
-        return errorResponse;
     }
 }

@@ -1,9 +1,9 @@
 com\micro\service\model\Company$CompanyAddress.class
 com\micro\service\model\Company.class
+com\micro\service\repository\StoreRepository.class
 com\micro\service\controller\CompanyController.class
 com\micro\service\controller\StoreController.class
 com\micro\service\model\Store.class
 com\micro\service\repository\CompanyRepository.class
-com\micro\service\repository\StoreRepository.class
 com\micro\service\MainServiceApplication.class
 com\micro\service\model\Store$StoreAddress.class

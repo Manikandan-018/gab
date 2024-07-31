@@ -1,59 +1,44 @@
 package com.micro.service.model;
 
-import java.util.UUID;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "stores")
+@Document(collection = "stores")
 public class Store {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", columnDefinition = "UNIQUEIDENTIFIER")
-    private UUID id;
-    @Column(name = "company_id", columnDefinition = "UNIQUEIDENTIFIER")
-    private UUID companyId; 
+    private String id;
+    private String companyId; 
     private String storeName;
-    @Embedded
     private StoreAddress address;
     private String storePhone;
     private String storeAlternatePhone;
     private String storeEmail;
     private String storeAlternateEmail;
     private String createdBy;
-    private String createdDate; 
+    private String createdDate;
     private String modifyBy;
     private String modifyDate;
 
+    
 
+    public String getId() {
+        return id;
+    }
 
-    public UUID getId() {
-		return id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    public String getCompanyId() {
+        return companyId;
+    }
 
-	
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
-    public UUID getCompanyId() {
-		return companyId;
-	}
-
-	public void setCompanyId(UUID companyId) {
-		this.companyId = companyId;
-	}
-
-	public String getStoreName() {
+    public String getStoreName() {
         return storeName;
     }
 
@@ -133,7 +118,6 @@ public class Store {
         this.modifyDate = modifyDate;
     }
 
-    @Embeddable
     public static class StoreAddress {
         private String storeStreet;
         private String storeArea;
@@ -141,6 +125,7 @@ public class Store {
         private String storePinCode;
 
         
+
         public String getStoreStreet() {
             return storeStreet;
         }
@@ -174,4 +159,3 @@ public class Store {
         }
     }
 }
-
